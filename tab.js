@@ -23,6 +23,7 @@ async function moveCurrentTabToWindow({ id, windowId }) {
     focusOnMovedTab(tabs[0]);
 }
 
-function focusOnMovedTab({ index, windowId }) {
-    browser.tabs.highlight({ windowId: windowId, tabs: index });
+function focusOnMovedTab({ id, windowId }) {
+    browser.tabs.update(id, { active: true });
+    browser.windows.update(windowId, { focused: true });
 }

@@ -1,8 +1,7 @@
-browser.commands.onCommand.addListener((command) => {
+browser.commands.onCommand.addListener(async (command) => {
     if (command === "move-tabs") {
-        browser.tabs.query({ currentWindow: true, active: true }).then((tabInfo) => {
-            moveCurrentTabToWindow(tabInfo[0]);
-        })
+        const tabInfo = await browser.tabs.query({ currentWindow: true, active: true });
+        moveCurrentTabToWindow(tabInfo[0]);
     }
 });
 

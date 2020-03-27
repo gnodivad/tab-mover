@@ -7,7 +7,7 @@ browser.commands.onCommand.addListener((command) => {
 });
 
 async function moveCurrentTabToWindow({ id, windowId }) {
-    let allWindows = await browser.windows.getAll({
+    const allWindows = await browser.windows.getAll({
         windowTypes: ["normal"]
     });
 
@@ -15,9 +15,14 @@ async function moveCurrentTabToWindow({ id, windowId }) {
         return;
     }
 
-    let allWindowId = allWindows.map(({ id }) => id);
+    const windowIds = allWindows.map(({ id }) => id);
+    const nextWindowId = windowIds[(windowIds.indexOf(windowId) + 1) % allWindows.length];
 
-    let nextWindowId = allWindowId[(allWindowId.indexOf(windowId) + 1) % allWindows.length];
+    const tabs = await browser.tabs.move(id, { index: -1, windowId: nextWindowId });
 
-    browser.tabs.move(id, { index: -1, windowId: nextWindowId });
+    focusOnMovedTab(tabs[0]);
+}
+
+function focusOnMovedTab({ index, windowId }) {
+    browser.tabs.highlight({ windowId: windowId, tabs: index });
 }
